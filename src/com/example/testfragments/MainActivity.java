@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class MainActivity extends FragmentActivity {
 	private void initViewPaper() {
 		 mPagerAdapter = new MyPageAdapter(getSupportFragmentManager());
 		 mViewPager.setAdapter(mPagerAdapter);
+		 mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 	}
 
 	private void initTableWidget() {
@@ -58,6 +60,26 @@ public class MainActivity extends FragmentActivity {
 		public void onClick(View v) {
 			int index = (Integer) v.getTag();
 			System.out.println(index);
+			
+			mViewPager.setCurrentItem(index);
+		}
+	};
+	
+	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener() {
+		
+		@Override
+		public void onPageSelected(int index) {
+			System.out.println("onPageSelected.index = " + index);
+		}
+		
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+			
+		}
+		
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+			
 		}
 	};
 	
