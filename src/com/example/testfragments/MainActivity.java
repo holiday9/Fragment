@@ -1,21 +1,107 @@
 package com.example.testfragments;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.Button;
+import android.widget.TabWidget;
+import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
+	private ViewPager mViewPager;
+    private PagerAdapter mPagerAdapter;
+    private TabWidget mTabWidget;
+    
+    private int mCount = 10;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		initView();
+		
+		initTableWidget();
+		initViewPaper();
+	}
+
+	private void initViewPaper() {
+		 mPagerAdapter = new MyPageAdapter(getSupportFragmentManager());
+		 mViewPager.setAdapter(mPagerAdapter);
+	}
+
+	private void initTableWidget() {
+		for (int i = 0;i < mCount;i++) {
+			Button btn1 = new Button(this);
+			btn1.setTag(i);
+			btn1.setText(String.valueOf(i));
+			mTabWidget.addView(btn1);
+			btn1.setOnClickListener(mTabClickListener);
+		}
+	}
+
+	private void initView() {
+		mTabWidget = (TabWidget) findViewById(R.id.tabwidget);
+		mViewPager = (ViewPager) findViewById(R.id.viewPager);
+	}
+	
+	private View.OnClickListener mTabClickListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			int index = (Integer) v.getTag();
+			System.out.println(index);
+		}
+	};
+	
+	private class MyPageAdapter extends FragmentStatePagerAdapter{
+
+		public MyPageAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			System.out.println("position = " + position);
+			return MyFragment.create(position);
+		}
+
+		@Override
+		public int getCount() {
+			return mCount;
+		}
+		
+	}
+	
+	private static class MyFragment extends Fragment {
+		public static MyFragment create(int index)
+        {
+            MyFragment f = new MyFragment();
+            Bundle b = new Bundle();
+            b.putInt("index", index);
+            f.setArguments(b);
+            return f;
+        }
+		
+		public MyFragment() {
+		}
+		
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                Bundle savedInstanceState) {
+			int index = getArguments().getInt("index");
+			
+			View rootView = inflater.inflate(R.layout.fragment_main, null);
+			TextView textView = (TextView) rootView.findViewById(R.id.text);
+			textView.setText(String.valueOf(index));
+			
+			return rootView;
+		}
 	}
 }
